@@ -1,5 +1,7 @@
 package cn.itcast.bos.service.base.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,5 +46,11 @@ public class CourierServiceImpl implements CourierService {
 		for (String idStr : idArray) {
 			courierRepository.restoreDelTag(Integer.valueOf(idStr));
 		}
+	}
+
+	@Override
+	public List<Courier> findNoAssociation(Specification<Courier> specification) {
+		// TODO Auto-generated method stub
+		return courierRepository.findAll(specification);
 	}
 }

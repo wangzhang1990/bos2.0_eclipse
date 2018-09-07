@@ -3,7 +3,10 @@ package cn.itcast.bos.web.action.base;
 import cn.itcast.bos.domain.base.FixedArea;
 import cn.itcast.bos.service.base.FixedAreaService;
 import cn.itcast.bos.web.action.common.BaseAction;
+import cn.itcast.crm.domain.Customer;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -16,11 +19,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 
+import com.opensymphony.xwork2.ActionContext;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.ws.rs.core.MediaType;
+
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * @author ZHANG
@@ -65,4 +73,51 @@ public class FixedAreaAction extends BaseAction<FixedArea> {
         pushPageDateToValueStack(pageData);
         return SUCCESS;
     }
+    @Action(value = "fixedArea_findNoAssociationCustomers", results = { @Result(name = "success", type = "json")})
+    public String findNoAssociationCustomers() {
+    	Collection<? extends Customer> collection = 
+    			WebClient.create("http://localhost:9998/crm_management/services/customerService/noassociationcustomers")
+    			.accept(MediaType.APPLICATION_JSON).getCollection(Customer.class);
+    	ActionContext.getContext().getValueStack().push(collection);
+		return SUCCESS;
+    }
+    @Action(value = "fixedArea_findHasAssociationCustomers", results = { @Result(name = "success", type = "json")})
+    public String findHasAssociationCustomers() {
+    	Collection<? extends Customer> collection = 
+    			WebClient.create("http://localhost:9998/crm_management/services/customerService/associationfixedareacustomers/" + model.getId())
+    			.accept(MediaType.APPLICATION_JSON).getCollection(Customer.class);
+    	ActionContext.getContext().getValueStack().push(collection);
+    	return SUCCESS;
+    }
+    
+    private String[] customerIds;
+    
+    public void setCustomerIds(String[] customerIds) {
+		this.customerIds = customerIds;
+	}
+	@Action(value = "fixedArea_associationCustomerToFixedArea", results = { @Result(name = "success", location = "/pages/base/fixed_area.html", type = "redirect") })
+    public String associationCustomerToFixedArea() {
+    	String joinCustomerIds = StringUtils.join(customerIds, "-");
+    	if (StringUtils.isBlank(joinCustomerIds)) {
+    		joinCustomerIds = "";
+		}
+    	WebClient.create("http://localhost:9998/crm_management/services/customerService/"
+    			+ "associationcustomerstofixedarea/?customerIdStr=" + joinCustomerIds + "&fixedAreaId=" + model.getId()).put(null);
+    	return SUCCESS;
+    }
+	
+	private Integer takeTimeId;
+	private Integer courierId;
+	
+	public void setTakeTimeId(Integer takeTimeId) {
+		this.takeTimeId = takeTimeId;
+	}
+	public void setCourierId(Integer courierId) {
+		this.courierId = courierId;
+	}
+	@Action(value = "fixedArea_associationCourierToFixedArea", results = { @Result(name = "success", location = "/pages/base/fixed_area.html", type = "redirect") })
+	public String associationCourierToFixedArea() {
+		fixedAreaService.associationCourierToFixedArea(courierId, takeTimeId, model.getId());
+		return SUCCESS;
+	}
 }

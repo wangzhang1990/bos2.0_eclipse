@@ -2,6 +2,8 @@ package cn.itcast.bos.web.action.base;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -11,6 +13,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -149,5 +152,21 @@ public class CourierAction extends ActionSupport implements ModelDriven<Courier>
 		return SUCCESS;
 	}
 	
-	
+	@Action(value = "courier_findNoAssociation"
+			, results = { @Result(name = "success", type = "json")})
+	public String findNoAssociation() {
+		Specification<Courier> specification = new Specification<Courier>() {
+
+			@Override
+			public Predicate toPredicate(Root<Courier> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				// TODO Auto-generated method stub
+				Predicate predicate = cb.isEmpty(root.get("fixedAreas").as(Set.class));
+				return predicate;
+			}
+		};
+		
+		List<Courier> list = courierService.findNoAssociation(specification);
+		ActionContext.getContext().getValueStack().push(list);
+		return SUCCESS;
+	}
 }

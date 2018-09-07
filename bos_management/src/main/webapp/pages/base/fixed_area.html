@@ -56,7 +56,43 @@
 			}
 			
 			function doAssociations(){
-				$('#customerWindow').window('open');
+				var rows = $("#grid").datagrid("getSelections")
+				//alert(rows.length)
+				if (rows.length != 1) {
+					$.messager.alert("警告", "只能选择一行数据", "warning")
+				} else {
+					
+					$("#customerFixedAreaId").val(rows[0].id) 
+					
+					
+					$.messager.progress({
+						interval :500 // 每0.5秒加载10%, 5秒加载完
+					})
+					
+					$.post("../../fixedArea_findHasAssociationCustomers", { "id" : rows[0].id }, function(data) {
+						$("#associationSelect").empty()
+						$.each(data, function(i, n) {
+							var option = "<option value=" + n.id + ">" + n.username + " : " + n.address + "</option>"
+							$("#associationSelect").append(option)
+							
+							// 请求结束后，关闭进度条
+						$.messager.progress('close');
+						// 弹出关联窗口 
+						$('#customerWindow').window('open');
+						});
+					})
+					$.post("../../fixedArea_findNoAssociationCustomers", function(data) {
+						//alert(data[0].username)
+						$("#noassociationSelect").empty()
+						$.each(data, function(i, n) {
+							var option = "<option value=" + n.id + ">" + n.username + " : " + n.address + "</option>"
+							$("#noassociationSelect").append(option)
+						});
+					})
+					
+					/*$.messager.progress("close")
+					$('#customerWindow').window('open');*/
+				}
 			}
 			
 			//工具栏
@@ -96,6 +132,7 @@
 						// 只选择了一个定区
 						// 弹出定区关联快递员 窗口 
 						$("#courierWindow").window('open');
+						$("#courierFixedAreaId").val(rows[0].id) 
 					}else{
 						// 没有选中定区，或者选择 了多个定区
 						$.messager.alert("警告","关联快递员,只能（必须）选择一个定区","warning");
@@ -192,6 +229,29 @@
 					$('#searchWindow').window("close");
 					var params = $("#searchForm").serializeJson()
 					$("#grid").datagrid("load", params)
+				})
+				
+				$("#toLeft").click(function() {
+					$("#noassociationSelect").append($("#associationSelect option:selected"))
+				})
+				$("#toRight").click(function() {
+					$("#associationSelect").append($("#noassociationSelect option:selected"))
+				})
+				$("#associationBtn").click(function() {
+					$("#associationSelect option").prop("selected", "selected")
+					$("#customerForm").submit()
+				})
+				$("#workingTime").combobox({
+					url: "../../takeTime_findAll.action",
+					valueField: "id",
+					textField: "name"
+				})
+				$("#associationCourierBtn").click(function() {
+					if ($("#courierForm").form("validate")) {
+						$("#courierForm").submit()
+					} else {
+						$.messager.alert("警告", "存在非法项", "warning")
+					}
 				})
 			});
 		
@@ -446,9 +506,9 @@
 		</div>
 
 		<!-- 关联客户窗口 -->
-		<div class="easyui-window" title="关联客户窗口" id="customerWindow" collapsible="false" closed="true" minimizable="false" maximizable="false" style="top:20px;left:200px;width: 600px;height: 300px;">
+		<div class="easyui-window" title="关联客户窗口" id="customerWindow" modal="true" collapsible="false" closed="true" minimizable="false" maximizable="false" style="top:20px;left:200px;width: 600px;height: 300px;">
 			<div style="overflow:auto;padding:5px;" border="false">
-				<form id="customerForm" action="../../decidedzone_assigncustomerstodecidedzone.action" method="post">
+				<form id="customerForm" action="../../fixedArea_associationCustomerToFixedArea.action" method="post">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="3">关联客户</td>
@@ -492,13 +552,13 @@
 							<td>
 								<!-- 存放定区编号 -->
 								<input type="hidden" name="id" id="courierFixedAreaId" />
-								<input type="text" name="courierId" class="easyui-combobox" required="true" />
+								<input type="text" name="courierId" class="easyui-combobox" required="true" data-options="url:'../../courier_findNoAssociation.action',valueField:'id',textField:'info'" />
 							</td>
 						</tr>
 						<tr>
 							<td>选择收派时间</td>
 							<td>
-								<input type="text" name="takeTimeId" class="easyui-combobox" required="true" />
+								<input id="workingTime" type="text" name="takeTimeId" class="easyui-combobox" required="true" />
 							</td>
 						</tr>
 						<tr>
