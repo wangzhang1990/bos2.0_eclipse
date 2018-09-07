@@ -7,3 +7,10 @@
 /common_parent/.project
 /crm_management/target
 /crm_domain/target
+/*.project
+/crm_management/*
+/crm_management/*.classpath
+/crm_management/*.project
+/crm_domain/*
+/crm_domain/*.classpath
+/crm_domain/*.project
