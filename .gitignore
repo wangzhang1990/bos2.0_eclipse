@@ -11,6 +11,9 @@
 /crm_management/*
 /crm_management/*.classpath
 /crm_management/*.project
-/crm_domain/*
 /crm_domain/*.classpath
 /crm_domain/*.project
+/bos_fore/target
+/**/*.project
+/**/*.classpath
+/**/*.settings
