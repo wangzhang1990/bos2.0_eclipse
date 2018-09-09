@@ -13,4 +13,15 @@
   <description>物流前端系统</description>
   
   
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.apache.tomcat.maven</groupId>
+  			<artifactId>tomcat7-maven-plugin</artifactId>
+  			<configuration>
+  				<port>9997</port>
+  			</configuration>
+  		</plugin>
+  	</plugins>
+  </build>
 </project>
