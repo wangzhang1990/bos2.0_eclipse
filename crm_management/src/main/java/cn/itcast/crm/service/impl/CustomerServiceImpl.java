@@ -46,4 +46,23 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 	}
 
+	@Override
+	public void register(Customer customer) {
+		// TODO Auto-generated method stub
+		customerRepository.save(customer);
+	}
+
+	@Override
+	public Customer findByPhone(String phoneNum) {
+		// TODO Auto-generated method stub
+		Customer customerByTelephone = customerRepository.findByTelephone(phoneNum);
+		return customerByTelephone;
+	}
+
+	@Override
+	public void updateCustomer(Customer customer) {
+		// TODO Auto-generated method stub
+		customerRepository.save(customer);
+	}
+
 }

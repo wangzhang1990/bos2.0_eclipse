@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>angularjs-demo1</title>
+		<script src="../js/angular.min.js"></script>
+	</head>
+
+	<body>
+		<div ng-app="myapp1" ng-controller="myctrl1">
+			<div>
+				<input type="text" name="name111" ng-model="name" />
+				<input type="button" name="but1" value="{{ but }}" />
+				<input type="button" name="but1" ng-bind="but" />
+				<button value="{{ but }}"></button>
+				<button ng-bind="but"></button>
+			</div>
+			<div ng-bind="name">hello,</div>
+			<div>hello,{{ name }}</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var myapp1 = angular.module("myapp1", [])
+		/*myapp1.controller("mycont1", function() {
+			
+		})*/
+		myapp1.controller("myctrl1", ["$scope", function($scope) {
+			$scope.name = "hello"
+			$scope.but = "111"
+		}])
+	</script>
+</html>
