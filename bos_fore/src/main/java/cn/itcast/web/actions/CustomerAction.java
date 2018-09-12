@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
 
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.Session;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -16,8 +20,11 @@ import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -40,12 +47,31 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
 		return customer;
 	}
 	
+	@Autowired
+	@Qualifier("jmsQueueTemplate")
+	private JmsTemplate jsmTemplate;
+	
 	@Action(value = "customer_sendSms")
 	public String sendSms() {
 		String code = RandomStringUtils.randomNumeric(4);
 		System.out.println("验证码为： " + code + ", 即将发送给用户" + customer.getTelephone());
 		ServletActionContext.getRequest().getSession().setAttribute("sms", code);
-		//调用发短信的util，发送短信验证码。这里就用假数据替代。
+		//调用发短信的util，发送短信验证码,同时获取返回值。这里就用假数据替代。
+		
+		//调用activemq，存入队列
+		jsmTemplate.send("bos_sms", new MessageCreator() {
+			
+			@Override
+			public Message createMessage(Session session) throws JMSException {
+				// TODO Auto-generated method stub
+				MapMessage mapMessage = session.createMapMessage();
+				mapMessage.setString("telephone", customer.getTelephone());
+				mapMessage.setString("code", code);
+				return mapMessage;
+			}
+		});
+		
+		//获取短信验证码后
 		try {
 			//String smsResult = SmsUtils.sendSmsByHTTP(customer.getTelephone(), "您好，验证码为【" + code + "】");
 			String smsResult = "000/abcdefg";
