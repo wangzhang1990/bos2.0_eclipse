@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>BootStrap+AngularJS分页显示 </title>
+		<script type="text/javascript" src="../../js/jquery.js"></script>
+		<script type="text/javascript" src="../../js/bootstrap.js"></script>
+		<link rel="stylesheet" href="../../css/bootstrap/bootstrap.css" />
+		<script type="text/javascript" src="../../js/angular.min.js"></script>
+	</head>
+
+	<body ng-app="paginationApp" ng-controller="paginationCtrl">
+		<div>
+			<table class="table">
+				<tr>
+					<th>商品编号</th>
+					<th>商品名</th>
+					<th>价格</th>
+				</tr>
+				<tr ng-repeat="product in products">
+					<td>{{ $index + 1 }}</td>
+					<td>{{ product.name }}</td>
+					<td>123</td>
+				</tr>
+			</table>
+
+		</div>
+		<div>
+			<ul class="pagination pull-right">
+				<li>
+					<a href="javascript:void(0)" ng-click="prev()">上一页</a>
+				</li>
+				<li ng-repeat="page in pageList">
+					<a href="javascript:void(0)" ng-click="selectPage(page)">{{ page }}</a>
+				</li>
+				<li>
+					<a href="javascript:void(0)" ng-click="next()">下一页</a>
+				</li>
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var paginationApp = angular.module("paginationApp", [])
+		paginationApp.controller("paginationCtrl", ["$scope", "$http", function($scope, $http) {
+			$scope.currentPage = 1;
+			$scope.pageSize = 4;
+			$scope.totalCount = 0;
+			$scope.totalPages = 0;
+
+			
+
+			$scope.prev = function() {
+				$scope.selectPage($scope.currentPage - 1)
+			}
+			$scope.next = function() {
+				$scope.selectPage($scope.currentPage + 1)
+			}
+			$scope.selectPage = function(page) {
+				$http({
+					method: "get",
+					url: "6_" + page + ".json",
+					params: {
+						pageSize : 4,
+						currentPage : page
+					}
+				}).success(function(data, status, headers, config) {
+					//好像不.products也可以
+					$scope.products = data.products
+					$scope.currentPage = page
+					$scope.totalCount = data.totalCount
+					$scope.totalPages = Math.ceil($scope.totalCount / $scope.pageSize)
+					
+					//alert($scope.totalPages)
+					//仿百度
+					var begin = page - 5
+					if (begin < 1) {
+						begin = 1
+					}
+					var end = begin + 9
+					if (end > $scope.totalPages) {
+						end = $scope.totalPages
+					}
+					begin = end - 9;
+					$scope.pageList = new Array();
+					for (var i = begin; i < end; i++) {
+						$scope.pageList.push(i)
+					}
+				})
+			}
+			
+			
+			
+			$scope.selectPage(1)
+		}])
+	</script>
+
+</html>

@@ -19,9 +19,6 @@
 		http://activemq.apache.org/schema/core
         http://activemq.apache.org/schema/core/activemq-core-5.8.0.xsd ">
 	
-	<!-- 扫盲包 -->
-	<!-- <context:component-scan base-package="cn.itcast.activemq" /> -->
-	
 	<!-- ActiveMQ 连接工厂 -->
     <!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供-->
     <!-- 如果连接网络：tcp://ip:61616；未连接网络：tcp://localhost:61616 以及用户名，密码-->
@@ -58,26 +55,6 @@
     </bean>
 
     <!--Spring JmsTemplate 的消息生产者 end-->
-
-    <!-- 消息消费者 start-->
-
-    <!-- 定义Queue监听器 -->
-   <!--  <jms:listener-container destination-type="queue" container-type="default" connection-factory="connectionFactory" acknowledge="auto">
-        <jms:listener destination="spring_queue" ref="queueConsumer1"/>
-        <jms:listener destination="spring_queue" ref="queueConsumer2"/>
-    </jms:listener-container>
-    
-    <jms:listener-container destination-type="queue" container-type="default" connection-factory="connectionFactory" acknowledge="auto">
-        <jms:listener destination="test.map" ref="queueReceiver3"/>
-    </jms:listener-container>
-
-    定义Topic监听器
-    <jms:listener-container destination-type="topic" container-type="default" connection-factory="connectionFactory" acknowledge="auto">
-        <jms:listener destination="spring_topic" ref="topicConsumer1"/>
-        <jms:listener destination="spring_topic" ref="topicConsumer2"/>
-    </jms:listener-container> -->
-
-    <!-- 消息消费者 end -->
     
     
 </beans>

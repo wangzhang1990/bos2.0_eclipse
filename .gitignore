@@ -17,3 +17,7 @@
 /**/*.project
 /**/*.classpath
 /**/*.settings
+/bos_sms/target
+/bos_domain/target
+/_otherFiles
+/bos_management/*.tern-project
