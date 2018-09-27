@@ -65,4 +65,17 @@ public class CustomerServiceImpl implements CustomerService {
 		customerRepository.save(customer);
 	}
 
+	@Override
+	public Customer login(String telephone, String password) {
+		// TODO Auto-generated method stub
+		Customer customerLogin = customerRepository.findByTelephoneAndPassword(telephone, password);
+		return customerLogin;
+	}
+
+	@Override
+	public String findFixedAreaIdByAddress(String address) {
+		// TODO Auto-generated method stub
+		return customerRepository.findFixedAreaIdByAddress(address);
+	}
+
 }

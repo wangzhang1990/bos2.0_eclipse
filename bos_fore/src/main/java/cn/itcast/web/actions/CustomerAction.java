@@ -1,16 +1,13 @@
 package cn.itcast.web.actions;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
 
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.Session;
-import javax.servlet.ServletContext;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -31,7 +28,6 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
 import cn.itcast.crm.domain.Customer;
-import cn.itcast.sms.utils.SmsUtils;
 import cn.itcast.utils.MailUtils;
 
 @Controller
@@ -163,5 +159,21 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
 			}
 		}
 		return NONE;
+	}
+	
+	@Action(value = "customer_login", results = { 
+			@Result(name = "success", type = "redirect", location = "/index.html#/myhome"),
+			@Result(name = "login", type = "redirect", location = "/index.html") })
+	public String login() {
+		
+		System.out.println("logging...");
+		Customer loginCustomer = WebClient.create("http://localhost:9998/crm_management/services/customerService"
+				+ "/customer/login?telephone=" + customer.getTelephone() + "&password=" + customer.getPassword()).accept(MediaType.APPLICATION_JSON).get(Customer.class);
+		if (loginCustomer == null) {
+			return LOGIN;
+		} else {
+			ServletActionContext.getRequest().getSession().setAttribute("customer", loginCustomer);
+			return SUCCESS;
+		}
 	}
 }

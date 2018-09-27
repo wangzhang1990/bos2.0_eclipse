@@ -47,4 +47,16 @@ public interface CustomerService {
 	@PUT
 	@Produces({ "application/xml", "application/json" })
 	public void updateCustomer(Customer customer);
+	
+	@Path("/customer/login")
+	@GET
+	@Produces({ "application/xml", "application/json" })
+	public Customer login(@QueryParam("telephone") String telephone, 
+			@QueryParam("password") String password);
+	
+	@Path("/customer/findFixedAreaIdByAddress")
+	@GET
+	@Consumes({ "application/xml", "application/json" })
+	@Produces({ "application/xml", "application/json" })
+	public String findFixedAreaIdByAddress(@QueryParam("address") String address);
 }

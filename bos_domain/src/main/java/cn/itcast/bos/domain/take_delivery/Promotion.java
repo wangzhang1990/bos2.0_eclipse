@@ -131,10 +131,10 @@ public class Promotion implements Serializable {
 	}
 
 	public String getDescription() {
-		if (description.contains(Constants.BOS_MANAGEMENT_URL + "/bos_management")) {
+		if (description.contains(Constants.BOS_MANAGEMENT_URL)) {
 			return description;
 		}
-		return description.replace("src=\"/bos_management", "src=\"" + Constants.BOS_MANAGEMENT_URL + "/bos_management");
+		return description.replace("src=\"/bos_management", "src=\"" + Constants.BOS_MANAGEMENT_URL);
 	}
 
 	public void setDescription(String description) {
