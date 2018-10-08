@@ -10,6 +10,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldIndex;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import cn.itcast.bos.domain.base.Area;
 
@@ -18,35 +22,46 @@ import cn.itcast.bos.domain.base.Area;
  */
 @Entity
 @Table(name = "T_WAY_BILL")
+@Document(indexName = "bos", type = "waybill")
 public class WayBill {
 
 	@Id
 	@GeneratedValue
 	@Column(name = "C_ID")
+	@org.springframework.data.annotation.Id
+	@Field(index = FieldIndex.not_analyzed, store = true, type = FieldType.Integer)
 	private Integer id;
 	@Column(name = "C_WAY_BILL_NUM", unique = true)
+	@Field(index = FieldIndex.not_analyzed, store = true, type = FieldType.String)
 	private String wayBillNum; // 运单编号
 	@OneToOne
 	@JoinColumn(name = "C_ORDER_ID")
 	private Order order; // 订单信息
 
 	@Column(name = "C_SEND_NAME")
+	@Field(index = FieldIndex.analyzed, analyzer = "ik", searchAnalyzer = "ik", store = true, type = FieldType.String)
 	private String sendName; // 寄件人姓名
 	@Column(name = "C_SEND_MOBILE")
+	@Field(index = FieldIndex.not_analyzed, store = true, type = FieldType.String)
 	private String sendMobile;// 寄件人电话
 	@Column(name = "C_SEND_COMPANY")
+	@Field(index = FieldIndex.analyzed, analyzer = "ik", searchAnalyzer = "ik", store = true, type = FieldType.String)
 	private String sendCompany;// 寄件人公司
 	@OneToOne
 	@JoinColumn(name = "C_SEND_AREA_ID")
 	private Area sendArea; // 寄件人省市区信息
 	@Column(name = "C_SEND_ADDRESS")
+	@Field(index = FieldIndex.analyzed, analyzer = "ik", searchAnalyzer = "ik", store = true, type = FieldType.String)
 	private String sendAddress;// 寄件人详细地址信息
 
 	@Column(name = "C_REC_NAME")
+	@Field(index = FieldIndex.analyzed, analyzer = "ik", searchAnalyzer = "ik", store = true, type = FieldType.String)
 	private String recName;// 收件人姓名
 	@Column(name = "C_REC_MOBILE")
+	@Field(index = FieldIndex.not_analyzed, store = true, type = FieldType.String)
 	private String recMobile;// 收件人电话
 	@Column(name = "C_REC_COMPANY")
+	@Field(index = FieldIndex.analyzed, analyzer = "ik", searchAnalyzer = "ik", store = true, type = FieldType.String)
 	private String recCompany;// 收件人公司
 	@OneToOne
 	@JoinColumn(name = "C_REC_AREA_ID")
@@ -61,10 +76,12 @@ public class WayBill {
 	@Column(name = "C_PAY_TYPE_NUM")
 	private String payTypeNum;// 支付类型编号：寄付日结、寄付月结、到付
 	@Column(name = "C_WEIGHT")
+	@Field(index = FieldIndex.not_analyzed, store = true, type = FieldType.String)
 	private Double weight;// 托寄物重量
 	@Column(name = "C_REMARK")
 	private String remark; // 备注
 	@Column(name = "C_NUM")
+	@Field(index = FieldIndex.no, store = true, type = FieldType.String)
 	private Integer num; // 原件数
 
 	@Column(name = "C_ARRIVE_CITY")
@@ -85,6 +102,7 @@ public class WayBill {
 	 * 运单状态： 1 待发货、 2 派送中、3 已签收、4 异常
 	 */
 	@Column(name = "C_SIGN_STATUS")
+	@Field(index = FieldIndex.not_analyzed, store = true, type = FieldType.String)
 	private Integer signStatus; // 签收状态
 
 	/*

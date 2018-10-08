@@ -53,4 +53,5 @@
 	<import resource="applicationContext-webService.xml"/>
 	<import resource="applicationContext-quartz.xml"/>
 	<import resource="applicationContext-mq.xml"/>
+	<import resource="applicationContext-elasticsearch.xml"/>
 </beans>

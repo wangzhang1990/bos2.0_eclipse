@@ -9,7 +9,7 @@ public interface WayBillService {
 
 	void save(WayBill model);
 
-	Page<WayBill> findPageData(Pageable pageable);
+	Page<WayBill> findPageData(WayBill model, Pageable pageable);
 
 	WayBill findByOrderNum(String wayBillNum);
 	

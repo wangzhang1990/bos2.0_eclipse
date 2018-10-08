@@ -50,8 +50,11 @@ public class WayBillAction extends BaseAction<WayBill> {
 	
 	@Action(value = "waybill_query", results = { @Result(name = "success", type = "json") })
 	public String pageQuery() {
+		System.out.println("当前model为 " + model.getRecAddress() + model.getSendAddress());
+		
+		
 		Pageable pageable = new PageRequest(page - 1, rows);
-		Page<WayBill> pageData = wayBillService.findPageData(pageable);
+		Page<WayBill> pageData = wayBillService.findPageData(model, pageable);
 		
 		pushPageDateToValueStack(pageData);
 		return SUCCESS;
