@@ -25,9 +25,9 @@
 				// 对save按钮条件 点击事件
 				$('#save').click(function() {
 					// 对form 进行校验
-					if($('#orderForm').form('validate')) {
-						$('#orderForm').submit();
-					}
+					alert(11)
+					$('#wayBillForm').submit();
+					
 				});
 				
 				$("#orderNum").blur(function() {
@@ -35,6 +35,7 @@
 						if (data.success) {
 							$("#wayBillForm").form('load', data.orderData)
 							$("input[name = 'order.courier.name']").val(data.orderData.courier.name)
+							$("input[name = 'order.id']").val(data.orderData.id)
 						} else{
 							$.messager.show({
 								title: '提示',
@@ -68,7 +69,7 @@
 			<a id="save" icon="icon-save" href="#" class="easyui-linkbutton" plain="true">保存</a>
 			<a id="no" icon="icon-no" href="#" class="easyui-linkbutton" plain="true">取消</a>
 		</div>
-		<form id="wayBillForm" action="#" method="post">
+		<form id="wayBillForm" action="../../waybill_save.action" method="post">
 			<div style="width:95%;margin:10px auto">
 				<div class="table-top">
 					<table class="table-edit" width="95%">
@@ -84,6 +85,7 @@
 							<td>运单号</td>
 							<td>
 								<input type="text" name="wayBillNum" id="wayBillNum" />
+								<input type="hidden" name="id" id="wayBillId" />
 							</td>
 						</tr>
 						<tr>

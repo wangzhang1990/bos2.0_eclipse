@@ -32,7 +32,13 @@ public class WayBillAction extends BaseAction<WayBill> {
 	
 	@Action(value = "waybill_save", results = { @Result(name = "success", type = "json") })
 	public String save() {
+		
+		System.out.println("------id------------" + model.getOrder().getId());
+		if (model.getOrder() != null && model.getOrder().getId() == null) {
+			model.setOrder(null);
+		}
 		wayBillService.save(model);
+		
 		HashMap<String, Object> hashMap = new HashMap<>();
 		hashMap.put("success", true);
 		hashMap.put("msg", "运单保存成功");
