@@ -12,6 +12,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.apache.struts2.json.annotations.JSON;
 
 /**
  * @description:菜单
@@ -81,7 +84,8 @@ public class Menu {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
+	
+	@JSON(serialize = false)
 	public Set<Role> getRoles() {
 		return roles;
 	}
@@ -89,7 +93,8 @@ public class Menu {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
-
+	
+	@JSON(serialize = false)
 	public Set<Menu> getChildrenMenus() {
 		return childrenMenus;
 	}
@@ -105,5 +110,13 @@ public class Menu {
 	public void setParentMenu(Menu parentMenu) {
 		this.parentMenu = parentMenu;
 	}
-
+	
+	@Transient
+	public Integer getpId( ) {
+		if (parentMenu == null) {
+			return 0;
+		}
+		
+		return parentMenu.getId();
+	}
 }

@@ -55,4 +55,5 @@
 	<import resource="applicationContext-mq.xml"/>
 	<import resource="applicationContext-elasticsearch.xml"/>
 	<import resource="applicationContext-shiro.xml"/>
+	<import resource="applicationContext-cache.xml"/>
 </beans>

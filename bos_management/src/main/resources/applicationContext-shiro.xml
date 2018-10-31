@@ -46,6 +46,13 @@
 	<bean id="securityManager"
 		class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="realm" ref="bosRealm"></property>
+		<property name="cacheManager" ref="shiroCacheManager"></property>
+	</bean>
+	
+
+	
+	<bean id="bosRealm" class="cn.itcast.bos.realm.BosRealm">
+		<property name="authorizationCacheName" value="bos"></property>
 	</bean>
 
 	<bean id="lifecycleBeanPostProcessor"
